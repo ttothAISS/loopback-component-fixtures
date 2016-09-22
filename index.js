@@ -80,7 +80,7 @@ module.exports = function setupTestFixtures(app, options) {
     });
   }
 
-  var Fixtures = app.model('fixtures', {
+  var Fixtures = app.registry.createModel('fixtures', {
     dataSource: false,
     base: 'Model'
   });
