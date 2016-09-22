@@ -27,14 +27,15 @@ describe('loopback fixtures component', function() {
       connector: 'memory'
     });
 
-    Item = dataSource.createModel('item', {
+    Item = app.registry.createModel('item', {
       id: {type: Number, id: true},
       requiredStuff: {type: String, required: true},
       name: String,
       description: String
     });
 
-    app.model(Item);
+    app.model(Item,{dataSource: 'db'});
+
     app.use(loopback.rest());
   });
 
