@@ -109,7 +109,13 @@ module.exports = function setupTestFixtures(app, options) {
 
   Fixtures.teardownFixtures = app.teardownFixtures = function(opts, callback){
     /* istanbul ignore else */
-    if (!callback) callback = opts;
+    // When only one param provided, we assume its the callback
+    if (!callback){
+      callback = opts;
+      opts = {};
+    }
+    // Use local opts only for this call
+    var localOptions = merge(options, opts);
     debugTeardown('Tearing down fixtures for', Object.keys(app.datasources));
     var dataSourceNames = Object.keys(app.datasources);
 
@@ -163,6 +169,9 @@ module.exports = function setupTestFixtures(app, options) {
         debug('your collections/tables are now empty.');
       }
       debug('Returning fixture teardown success message');
+      if(localOptions.purgeCachedOnTeardown){
+        cachedFixtures = undefined; 
+      }
       callback(null, 'teardown complete');
     });
   };
