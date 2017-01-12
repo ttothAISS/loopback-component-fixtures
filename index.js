@@ -88,13 +88,19 @@ module.exports = function setupTestFixtures(app, options) {
 
   Fixtures.setupFixtures = app.setupFixtures = function(opts, callback){
     /* istanbul ignore else */
-    if (!callback) callback = opts;
+    // When only one param provided, we assume its the callback
+    if (!callback){
+      callback = opts;
+      opts = {};
+    }
+    // Use local opts only for this call
+    var localOptions = merge(options, opts);
     debug('Loading fixtures');
-    loadFixtures(app.models, options.fixturesPath, function(errors){
+    loadFixtures(app.models, localOptions.fixturesPath, function(errors){
       if (errors) {
         debug('Fixtures failed to load:', errors);
       }
-      if (errors && options.errorOnSetupFailure) {
+      if (errors && localOptions.errorOnSetupFailure) {
         return callback(errors);
       }
       callback(null, 'setup complete');
